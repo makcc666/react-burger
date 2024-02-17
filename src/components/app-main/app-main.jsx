@@ -1,0 +1,19 @@
+import React from 'react';
+import styles from "./app-main.module.scss";
+import classNames from "classnames";
+import BurgerIngredients from "../burger-Ingredients/burger-ingredients";
+
+const AppMain = () => {
+	return (
+		<main className={styles.main}>
+			<div className={classNames(styles.container, styles.assembler)}>
+				<BurgerIngredients/>
+				<div className={classNames(styles.burgerConstructor)}>
+					asfsaf
+				</div>
+			</div>
+		</main>
+	);
+};
+
+export default AppMain;
