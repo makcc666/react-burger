@@ -3,33 +3,25 @@ import classNames from "classnames";
 import styles from "./burger-ingredients.module.scss";
 import TabsIngredients from "./tabs/tabs";
 import GroupIngredients from "./group/group";
+import {getGroupedItems} from "../../utils/data";
 
 
 
 const BurgerIngredients = () => {
+	const groupedIngredients = [...getGroupedItems().values()];
+	console.log(groupedIngredients)
+	
 	return (
 		<section className={classNames(styles.burgerIngredients)}>
 			<h2 className={styles.title}>Соберите бургер</h2>
 			<TabsIngredients/>
 			<ul className={styles.ingredientsList}>
-				<li className={styles.group}>
-					<GroupIngredients/>
-				</li>
-				<li className={styles.group}>
-					<GroupIngredients/>
-				</li>
-				<li className={styles.group}>
-					<GroupIngredients/>
-				</li>
-				<li className={styles.group}>
-					<GroupIngredients/>
-				</li>
-				<li className={styles.group}>
-					<GroupIngredients/>
-				</li>
-				<li className={styles.group}>
-					<GroupIngredients/>
-				</li>
+				{groupedIngredients.map(record=> (
+					<li className={styles.group} key={record.title}>
+						<GroupIngredients {...record}/>
+					</li>
+				))}
+	
 			</ul>
 		</section>
 	

@@ -1,18 +1,20 @@
 import React from 'react';
 import styles from "./item.module.scss";
 import {Counter, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import {getRandomInt} from "../../../utils/data";
 
-const Item = () => {
+const Item = ({image, price, name, ...props}) => {
+	const count = getRandomInt(0, 3) === 0 ? getRandomInt(1, 3) : null;
 	return (
 		<article className={styles.container}>
-			<Counter count={1} size="default" extraClass="m-1" />
+			{count && <Counter count={count} size="default" extraClass="m-1"/>}
 			
-			<img className={styles.image} src="https://code.s3.yandex.net/react/code/sauce-04.png"/>
+			<img className={styles.image} src={image}/>
 			<div className={styles.price}>
-				<span>20</span>
+				<span>{price}</span>
 				<CurrencyIcon type="primary"/>
 			</div>
-			<p className={styles.title}>Краторная булка N-200i</p>
+			<p className={styles.title}>{name}</p>
 		</article>
 	);
 };

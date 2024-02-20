@@ -1,4 +1,30 @@
-export const hardcoreData = [
+/*
+export enum ETypeIngredient {
+	BUN="bun",
+	MAIN="main",
+	SAUCE="sauce",
+}
+ */
+
+// Т.к. в задаче не явно указан запрет на редактирование hardcode данных, то использую его вместо ENUM
+export type TTypeIngredient = "bun" | "main" | "sauce"
+
+export interface IIngredient {
+	"_id": string,
+	"name": string,
+	"type": TTypeIngredient,
+	"proteins": number,
+	"fat": number,
+	"carbohydrates": number,
+	"calories": number,
+	"price": number,
+	"image": string,
+	"image_mobile": string,
+	"image_large": string,
+	"__v": number
+}
+
+export const hardcoreData: IIngredient[] = [
 	{
 		"_id": "60666c42cc7b410027a1a9b1",
 		"name": "Краторная булка N-200i",
@@ -210,3 +236,89 @@ export const hardcoreData = [
 		"__v": 0
 	}
 ];
+
+const getAllIngredients = () => [...hardcoreData];
+
+
+export interface IGgetGroupedBunAndAnotherItems {
+	bun: IIngredient[],
+	another: IIngredient[],
+}
+
+export const getGroupedBunAndAnotherItems = (): IGgetGroupedBunAndAnotherItems => {
+	const res: IGgetGroupedBunAndAnotherItems = {
+		bun: [],
+		another: [],
+	}
+
+	for (const ingredient of getAllIngredients()) {
+		const key = ingredient.type === "bun" ? "bun" : "another";
+		res[key].push(ingredient);
+	}
+
+	return res;
+}
+
+export type TGetGroupedItems = Map<TTypeIngredient, { title: string, list: IIngredient[] }>;
+
+const getTitleFromType = (type:TTypeIngredient)=>{
+	switch (type){
+		case "bun":{
+			return "Булки";
+			break
+		}
+		case "sauce": {
+			return"Соусы";
+			break;
+		}
+		case "main": {
+			return"Начинка";
+			break;
+		}
+		default: {
+			return"Новенькое";
+			break;
+		}
+	}
+}
+export const getGroupedItems = (): TGetGroupedItems => {
+	const res: TGetGroupedItems = new Map();
+	for (const ingredient of getAllIngredients()) {
+		const {type} = ingredient;
+
+		if (!res.has(type)) {
+			res.set(
+				type,
+				{
+					title: getTitleFromType(type),
+					list: []
+				}
+			);
+		}
+		res.get(type)?.list.push(ingredient);
+	}
+
+	return res;
+}
+
+export function getRandomInt(min: number, max: number) {
+	const intMin = Math.ceil(min);
+	const intMax = Math.floor(max);
+	return Math.floor(Math.random() * (intMax - intMin + 1)) + intMin;
+}
+
+export const getRandomBurgerConstructor = (): IIngredient[] => {
+	const res: IIngredient[] = []
+	let leftCount = 20;
+	const groupedItems = getGroupedBunAndAnotherItems();
+
+	while (leftCount-- > 0) {
+		const key: "bun" | "another" = res.length === 0 || leftCount === 0 ? "bun" : "another";
+		res.push(
+			groupedItems[key][getRandomInt(0, groupedItems[key].length - 1)]
+		);
+
+	}
+
+	return res;
+}

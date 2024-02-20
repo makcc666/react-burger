@@ -2,19 +2,16 @@ import React from "react";
 import styles from "./group.module.scss";
 import Item from "../item/item";
 
-const GroupIngredients = () => {
+const GroupIngredients = ({title,list,...props}) => {
 	
 	return (
 		<aside>
-			<h3 className={styles.title}>Булки</h3>
+			<h3 className={styles.title}>{title}</h3>
 			<div className={styles.list}>
-				<Item/>
-				<Item/>
-				<Item/>
-				<Item/>
-				<Item/>
-				<Item/>
-				<Item/>
+				{list.map(item=>(
+					<Item {...item}/>
+				))}
+	
 			</div>
 		</aside>
 	)

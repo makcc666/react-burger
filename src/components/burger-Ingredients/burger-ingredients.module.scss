@@ -13,13 +13,8 @@
 
 .ingredientsList {
   overflow-y: scroll;
-  background-color: black;
   margin: var(--SIZE_x10) 0 0 0;
-  list-style-type: none;
   padding: 0;
 
-  & > .group {
-
-  }
 }
 

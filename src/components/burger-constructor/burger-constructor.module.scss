@@ -1,0 +1,83 @@
+.burgerConstructor {
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) max-content;
+  box-sizing: border-box;
+
+
+  & .totalIngredients {
+	list-style-type: none;
+	padding: 0;
+	margin: var(--SIZE_x25) 0 0 0;
+
+	display: flex;
+	flex-direction: column;
+	gap: var(--SIZE_x4);
+	max-height: 100%;
+  }
+
+}
+
+.itemContainer {
+
+}
+
+
+.scrolledIngredients {
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: var(--SIZE_x4);
+
+  & .content {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--SIZE_x4);
+
+	& .unlockedItem {
+	  display: flex;
+	  align-items: center;
+	  gap: var(--SIZE_x2);
+	}
+  }
+}
+
+
+.lockedItem {
+	margin-left: calc(24px + var(--SIZE_x2))
+}
+
+
+.orderContainer {
+  margin: var(--SIZE_x10) 0;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+
+  & .orderContent {
+	display: flex;
+	gap: var(--SIZE_x10);
+
+	& .priceContainer {
+	  display: flex;
+	  gap: var(--SIZE_x2);
+
+	  & svg {
+		height: 100%;
+		width: 41px;
+	  }
+	}
+  }
+}
+
+.priceAmount {
+  composes: text text_type_digits-medium from global;
+
+  display: flex;
+  align-items: center;
+
+}
