@@ -1,13 +1,25 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --SIZE_BASE: var(--offset-base-size);
+  --SIZE_x2: calc(var(--SIZE_BASE) * 2);
+  --SIZE_x3: calc(var(--SIZE_BASE) * 3);
+  --SIZE_x4: calc(var(--SIZE_BASE) * 4);
+  --SIZE_x5: calc(var(--SIZE_BASE) * 5);
+  --SIZE_x6: calc(var(--SIZE_BASE) * 6);
+  --SIZE_x8: calc(var(--SIZE_BASE) * 8);
+  --SIZE_x9: calc(var(--SIZE_BASE) * 9);
+  --SIZE_x10: calc(var(--SIZE_BASE) * 10);
+  --SIZE_x15: calc(var(--SIZE_BASE) * 15);
+  --SIZE_x20: calc(var(--SIZE_BASE) * 20);
+  --SIZE_x25: calc(var(--SIZE_BASE) * 25);
+  --SIZE_x30: calc(var(--SIZE_BASE) * 30);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html,
+#root,
+body {
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+
 }
+

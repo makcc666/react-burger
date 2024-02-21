@@ -1,28 +1,5 @@
-/*
-export enum ETypeIngredient {
-	BUN="bun",
-	MAIN="main",
-	SAUCE="sauce",
-}
- */
+import {IGroupOfIngredients, IIngredient, TTypeIngredient} from "./types";
 
-// Т.к. в задаче не явно указан запрет на редактирование hardcode данных, то использую его вместо ENUM
-export type TTypeIngredient = "bun" | "main" | "sauce"
-
-export interface IIngredient {
-	"_id": string,
-	"name": string,
-	"type": TTypeIngredient,
-	"proteins": number,
-	"fat": number,
-	"carbohydrates": number,
-	"calories": number,
-	"price": number,
-	"image": string,
-	"image_mobile": string,
-	"image_large": string,
-	"__v": number
-}
 
 export const hardcoreData: IIngredient[] = [
 	{
@@ -259,24 +236,24 @@ export const getGroupedBunAndAnotherItems = (): IGgetGroupedBunAndAnotherItems =
 	return res;
 }
 
-export type TGetGroupedItems = Map<TTypeIngredient, { title: string, list: IIngredient[] }>;
+export type TGetGroupedItems = Map<TTypeIngredient, IGroupOfIngredients>;
 
-const getTitleFromType = (type:TTypeIngredient)=>{
-	switch (type){
-		case "bun":{
+const getTitleFromType = (type: TTypeIngredient) => {
+	switch (type) {
+		case "bun": {
 			return "Булки";
 			break
 		}
 		case "sauce": {
-			return"Соусы";
+			return "Соусы";
 			break;
 		}
 		case "main": {
-			return"Начинка";
+			return "Начинка";
 			break;
 		}
 		default: {
-			return"Новенькое";
+			return "Новенькое";
 			break;
 		}
 	}
@@ -307,17 +284,17 @@ export function getRandomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (intMax - intMin + 1)) + intMin;
 }
 
-export const getRandomBurgerConstructor = (): IIngredient[] => {
+export const getRandomBurgerConstructor = (count: number): IIngredient[] => {
+	if (!Number.isSafeInteger(count) || count < 1) throw new Error("getRandomBurgerConstructor:: arg count is invalid")
+
 	const res: IIngredient[] = []
-	let leftCount = 20;
 	const groupedItems = getGroupedBunAndAnotherItems();
 
-	while (leftCount-- > 0) {
-		const key: "bun" | "another" = res.length === 0 || leftCount === 0 ? "bun" : "another";
-		res.push(
-			groupedItems[key][getRandomInt(0, groupedItems[key].length - 1)]
-		);
-
+	while (res.length !== count) {
+		const key: "bun" | "another" = res.length === 0 ? "bun" : "another";
+		const item = groupedItems[key].splice(getRandomInt(0, groupedItems[key].length - 1), 1)[0];
+		res.push(item);
+		if (groupedItems[key].length === 0) break;
 	}
 
 	return res;

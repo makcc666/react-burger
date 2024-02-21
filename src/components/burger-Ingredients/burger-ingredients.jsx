@@ -9,7 +9,7 @@ import {getGroupedItems} from "../../utils/data";
 
 const BurgerIngredients = () => {
 	const groupedIngredients = [...getGroupedItems().values()];
-	console.log(groupedIngredients)
+	// console.log(groupedIngredients)
 	
 	return (
 		<section className={classNames(styles.burgerIngredients)}>
@@ -17,7 +17,7 @@ const BurgerIngredients = () => {
 			<TabsIngredients/>
 			<ul className={styles.ingredientsList}>
 				{groupedIngredients.map(record=> (
-					<li className={styles.group} key={record.title}>
+					<li key={record.title}>
 						<GroupIngredients {...record}/>
 					</li>
 				))}
