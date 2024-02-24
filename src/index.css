@@ -12,6 +12,8 @@
   --SIZE_x20: calc(var(--SIZE_BASE) * 20);
   --SIZE_x25: calc(var(--SIZE_BASE) * 25);
   --SIZE_x30: calc(var(--SIZE_BASE) * 30);
+
+  --text-secondary-color:#8585ad;
 }
 
 html,
