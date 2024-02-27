@@ -1,8 +1,8 @@
 import {IIngredient} from "../../../utils/types";
-import {THandlerChose} from "../details-popup/details-popup.types";
 
+export type THandlerIngredientChose = (ingredient: IIngredient) => void;
 
 export interface IPropsItem {
 	ingredient: IIngredient,
-	handlerChoseIngredient: THandlerChose
+	handlerChoseIngredient: THandlerIngredientChose
 }

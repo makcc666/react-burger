@@ -1,6 +1,6 @@
 import {IGroupOfIngredients} from "../../../utils/types";
-import {THandlerChose} from "../details-popup/details-popup.types";
+import {THandlerIngredientChose} from "../item/item.types";
 
 export interface IPropsGroup extends IGroupOfIngredients {
-	handlerChoseIngredient: THandlerChose
+	handlerChoseIngredient: THandlerIngredientChose
 }

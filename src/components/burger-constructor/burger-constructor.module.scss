@@ -81,16 +81,3 @@
   align-items: center;
 
 }
-
-
-
-
-
-
-.popupTest {
-  background-color: red;
-  &::backdrop {
-	background-color: red;
-
-  }
-}

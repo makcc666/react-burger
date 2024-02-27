@@ -4,6 +4,7 @@ import AppHeader from "../app-header/app-header";
 import AppMain from "../app-main/app-main";
 
 function App() {
+
 	return (
 		<div className={styles.app}>
 			<AppHeader/>

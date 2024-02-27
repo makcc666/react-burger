@@ -1,11 +1,10 @@
 import React from 'react';
 import styles from "./item.module.scss";
 import {Counter, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {getRandomInt} from "../../../utils/data";
 import {IPropsItem} from "./item.types";
 
 const Item = ({ingredient, handlerChoseIngredient}: IPropsItem) => {
-	const count = getRandomInt(0, 3) === 0 ? getRandomInt(1, 3) : null;
+	const count = null;
 	return (
 		<article className={styles.container} onClick={() => handlerChoseIngredient(ingredient)}>
 			{count && <Counter count={count} size="default" extraClass="m-1"/>}

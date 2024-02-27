@@ -1,25 +1,55 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import classNames from "classnames";
 import styles from "./burger-ingredients.module.scss";
 import TabsIngredients from "./tabs/tabs";
 import GroupIngredients from "./group/group";
 import {getGroupedItems} from "../../utils/data";
-import DetailsPopup from "./details-popup/details-popup";
+import Modal from "../modal/modal";
+import IngredientDetails from "./ingredient-details/ingredient-details";
 
-const groupedIngredients = [...getGroupedItems().values()];
 
 
 const BurgerIngredients = () => {
 	// console.log(groupedIngredients)
-	const [detailsPopup, setDetailsPopup] = useState(null);
-	const handlerChoseIngredient = (ingredient) => {
-		setDetailsPopup(() => ({...ingredient}));
-	}
+	const [selectedDetailsIngredient, setSelectedDetailsIngredient] = useState(null);
 	
+	const handlerChoseIngredient = (ingredient) => setSelectedDetailsIngredient({...ingredient});
+	const handlerCloseModal = () => {
+		setSelectedDetailsIngredient(null)
+	};
+	
+	const [groupedIngredients, setGroupedIngredients] = useState([]);
+	
+	useEffect(() => {
+		
+		const _fetchData = async () => {
+			try {
+				const res = await fetch("https://norma.nomoreparties.space/api/ingredients")
+				const resJson = await res.json();
+				console.log("resJson::", resJson);
+				if (resJson.success !== true) throw new Error(resJson.data || resJson.error || "Невалидные данный от сервера");
+				const items = resJson.data;
+				if (items.length === 0) throw new Error("Список ингредиентов пуст");
+				setGroupedIngredients(
+					[...getGroupedItems(items).values()]
+				);
+			} catch (e) {
+				alert(`Ошибка загрузки ингредиентов: ${e.toString()}`)
+				throw e;
+			}
+		};
+		
+		_fetchData();
+	}, []);
 	
 	return (
 		<>
-			<DetailsPopup ingredient={detailsPopup}/>
+			{selectedDetailsIngredient &&
+				<Modal onClose={handlerCloseModal} title="Детали ингредиента">
+					<IngredientDetails ingredient={selectedDetailsIngredient}/>
+				</Modal>
+			}
+			
 			<section className={classNames(styles.burgerIngredients)}>
 				<h2 className={styles.title}>Соберите бургер</h2>
 				<TabsIngredients/>

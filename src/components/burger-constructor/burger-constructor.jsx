@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import {getRandomBurgerConstructor} from "../../utils/data";
 import styles from "./burger-constructor.module.scss";
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import Popup from "../popup/popup";
-import OrderPopup from "./order-popup/order-popup";
+import Modal from "../modal/modal";
+import OrderDetails from "./order-details/order-details";
 
 const randomBurgerConstructor = getRandomBurgerConstructor(12);
 
@@ -19,22 +19,18 @@ const groupedRandomBurgerConstructor = randomBurgerConstructor.reduce((res, item
 const totalPrice = randomBurgerConstructor.reduce((sum, item) => sum + item.price, 0)
 
 const BurgerConstructor = () => {
-	const popupControls = {
-		open: null,
-		close: null,
-	}
-	const handlerPopupController = ({close, open}) => {
-		popupControls.open = open;
-		popupControls.close = close;
-	}
-	const handlerCreateOrder = () => {
-		if (typeof popupControls.open !== "function") return;
-		popupControls.open();
-	}
+	const [orderDetailsToggle, setOrderDetailsToggle] = useState(false);
+
+	const handlerCloseModal = () => setOrderDetailsToggle(false)
+	const handlerOpenModal = ()=>setOrderDetailsToggle(true);
 	
 	return (
 		<>
-			<OrderPopup className={styles.popupTest} switchController={handlerPopupController}/>
+			{orderDetailsToggle &&
+				<Modal onClose={handlerCloseModal}>
+					<OrderDetails/>
+				</Modal>
+			}
 			
 			<section className={styles.burgerConstructor}>
 				<ul className={styles.totalIngredients}>
@@ -78,7 +74,7 @@ const BurgerConstructor = () => {
 							<p className={styles.priceAmount}>{totalPrice}</p>
 							<CurrencyIcon type="primary"/>
 						</div>
-						<Button htmlType="button" type="primary" size="medium" onClick={handlerCreateOrder}>Оформить заказ</Button>
+						<Button htmlType="button" type="primary" size="medium" onClick={handlerOpenModal}>Оформить заказ</Button>
 					</div>
 				</div>
 			</section>

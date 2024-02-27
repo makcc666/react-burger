@@ -258,9 +258,9 @@ const getTitleFromType = (type: TTypeIngredient) => {
 		}
 	}
 }
-export const getGroupedItems = (): TGetGroupedItems => {
+export const getGroupedItems = (itemsList = getAllIngredients()): TGetGroupedItems => {
 	const res: TGetGroupedItems = new Map();
-	for (const ingredient of getAllIngredients()) {
+	for (const ingredient of itemsList) {
 		const {type} = ingredient;
 
 		if (!res.has(type)) {

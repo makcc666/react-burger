@@ -28,3 +28,4 @@ export interface IGroupOfIngredients {
 	title:string,
 	list:IIngredient[]
 }
+

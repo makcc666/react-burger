@@ -2,9 +2,7 @@ import React from 'react';
 import styles from "./app-main.module.scss";
 import classNames from "classnames";
 import BurgerIngredients from "../burger-Ingredients/burger-ingredients";
-import {getRandomBurgerConstructor} from "../../utils/data";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
-import Popup from "../popup/popup";
 
 const AppMain = () => {
 	return (
