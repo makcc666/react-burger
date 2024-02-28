@@ -35,7 +35,7 @@ const BurgerIngredients = () => {
 				);
 			} catch (e) {
 				alert(`Ошибка загрузки ингредиентов: ${e.toString()}`)
-				throw e;
+				// throw e;
 			}
 		};
 		
