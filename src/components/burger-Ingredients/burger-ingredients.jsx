@@ -8,7 +8,6 @@ import Modal from "../modal/modal";
 import IngredientDetails from "./ingredient-details/ingredient-details";
 
 
-
 const BurgerIngredients = () => {
 	// console.log(groupedIngredients)
 	const [selectedDetailsIngredient, setSelectedDetailsIngredient] = useState(null);
@@ -24,9 +23,10 @@ const BurgerIngredients = () => {
 		
 		const _fetchData = async () => {
 			try {
-				const res = await fetch("https://norma.nomoreparties.space/api/ingredients")
+				const res = await fetch("https://norma.nomoreparties.space/api/ingredients");
+				if (!res.ok) throw new Error("Не удалось получить данные от сервера");
 				const resJson = await res.json();
-				console.log("resJson::", resJson);
+				// console.log("resJson::", resJson);
 				if (resJson.success !== true) throw new Error(resJson.data || resJson.error || "Невалидные данный от сервера");
 				const items = resJson.data;
 				if (items.length === 0) throw new Error("Список ингредиентов пуст");
