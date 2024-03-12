@@ -1,80 +1,114 @@
-import React, { useState} from 'react';
-import {getRandomBurgerConstructor} from "../../utils/data";
+import React, {useCallback, useState} from 'react';
 import styles from "./burger-constructor.module.scss";
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import Modal from "../modal/modal";
 import OrderDetails from "./order-details/order-details";
+import {useDispatch, useSelector} from "react-redux";
+import StubItem from "./stub-item/stub-item";
+import ScrolledIngredient from "./scrolled-ingredient/scrolled-ingredient";
+import {useDrop} from "react-dnd";
+import {burgerConstructorSlice} from "../../service/store/burger-constructor/burger-constructor.slice";
+import {getClearIngredientsList} from "../../service/store/burger-constructor/burger-constructor.utils";
+import {sendOrder} from "../../service/store/burger-offer-order/burger-offer-order.utils";
+import ModalOfferOrder from "./modal-offer-order/modal-offer-order";
+import {DRAG_AND_DROP_TYPE} from "./burger-constructor.types";
 
-const randomBurgerConstructor = getRandomBurgerConstructor(12);
-
-
-const groupedRandomBurgerConstructor = randomBurgerConstructor.reduce((res, item) => {
-	res[item.type === "bun" ? "bun" : "another"].push(item);
-	return res;
-}, {
-	bun: [],
-	another: []
-})
-
-const totalPrice = randomBurgerConstructor.reduce((sum, item) => sum + item.price, 0)
 
 const BurgerConstructor = () => {
-	const [orderDetailsToggle, setOrderDetailsToggle] = useState(false);
-
-	const handlerCloseModal = () => setOrderDetailsToggle(false)
-	const handlerOpenModal = ()=>setOrderDetailsToggle(true);
+	const dispatch = useDispatch();
+	const {isBlocked: modalIsBlocked, isDisplay: modalIsDisplay} = useSelector(store => store.offerOrder)
+	const burgerConstructorStoreData = useSelector(store => store.burgerConstructor);
+	
+	const addIngredient = useCallback(
+		({ingredient}) => {
+			dispatch(burgerConstructorSlice.actions.addIngredient(ingredient));
+			dispatch(burgerConstructorSlice.actions.calculateStats());
+		},
+		[dispatch,]
+	);
+	
+	const [, drop] = useDrop(
+		() => ({
+			accept: DRAG_AND_DROP_TYPE,
+			drop(_item) {
+				addIngredient(_item)
+			},
+			collect: (monitor) => ({})
+		}),
+		[addIngredient],
+	)
+	
+	
+	const requestCreateOffer = async () => {
+		const res = await dispatch(
+			sendOrder(
+				getClearIngredientsList().map(ingredient => ingredient._id)
+			)
+		)
+		if (res?.error) {
+			dispatch(burgerConstructorSlice.actions.resetStore());
+		}
+		console.log("requestCreateOffer::ok", res)
+	}
 	
 	return (
 		<>
-			{orderDetailsToggle &&
-				<Modal onClose={handlerCloseModal}>
-					<OrderDetails/>
-				</Modal>
-			}
+			{modalIsDisplay && <ModalOfferOrder/>}
 			
 			<section className={styles.burgerConstructor}>
-				<ul className={styles.totalIngredients}>
-					<li className={styles.lockedItem} key={groupedRandomBurgerConstructor.bun[0]._id + "_top"}>
-						<ConstructorElement
-							type="top"
-							isLocked={true}
-							text={groupedRandomBurgerConstructor.bun[0].name + " (верх)"}
-							thumbnail={groupedRandomBurgerConstructor.bun[0].image}
-							price={groupedRandomBurgerConstructor.bun[0].price}
-						/>
+				<ul ref={drop} className={styles.totalIngredients}>
+					<li className={styles.lockedItem} key={"stubBunTop"}>
+						{burgerConstructorStoreData.bun
+							? <ConstructorElement
+								type="top"
+								isLocked={true}
+								text={burgerConstructorStoreData.bun.name + " (верх)"}
+								thumbnail={burgerConstructorStoreData.bun.image}
+								price={burgerConstructorStoreData.bun.price}
+							/>
+							: <StubItem type="bunTop"/>
+						}
 					</li>
 					<li className={styles.scrolledIngredients} key={"scrolled"}>
 						<ul className={styles.content}>
-							{groupedRandomBurgerConstructor.another.map(item => (
-								<li key={item._id} className={styles.unlockedItem}>
-									<DragIcon type="primary"/>
-									<ConstructorElement
-										text={item.name}
-										thumbnail={item.image}
-										price={item.price}
-									/>
+							{burgerConstructorStoreData.ingredients.length > 0
+								? burgerConstructorStoreData.ingredients.map((item, index) => (
+									<li key={item.uid} className={styles.unlockedItem}>
+										<ScrolledIngredient ingredient={item} itemIndex={index}/>
+									</li>
+								))
+								: <li key="stubIngredient" className={styles.stubIngredient}>
+									<StubItem type="ingredient"/>
 								</li>
-							))}
+							}
 						</ul>
 					
 					</li>
-					<li className={styles.lockedItem} key={groupedRandomBurgerConstructor.bun[0]._id + "_bottom"}>
-						<ConstructorElement
-							type="bottom"
-							isLocked={true}
-							text={groupedRandomBurgerConstructor.bun[0].name + " (низ)"}
-							thumbnail={groupedRandomBurgerConstructor.bun[0].image}
-							price={groupedRandomBurgerConstructor.bun[0].price}
-						/>
+					<li className={styles.lockedItem} key={"stubBunBottom"}>
+						{burgerConstructorStoreData.bun
+							? <ConstructorElement
+								type="bottom"
+								isLocked={true}
+								text={burgerConstructorStoreData.bun.name + " (низ)"}
+								thumbnail={burgerConstructorStoreData.bun.image}
+								price={burgerConstructorStoreData.bun.price}
+							/>
+							: <StubItem type="bunBottom"/>
+						}
 					</li>
 				</ul>
 				<div className={styles.orderContainer}>
 					<div className={styles.orderContent}>
 						<div className={styles.priceContainer}>
-							<p className={styles.priceAmount}>{totalPrice}</p>
+							<p className={styles.priceAmount}>{burgerConstructorStoreData.stats.totalPrice}</p>
 							<CurrencyIcon type="primary"/>
 						</div>
-						<Button htmlType="button" type="primary" size="medium" onClick={handlerOpenModal}>Оформить заказ</Button>
+						<Button
+							htmlType="button" type="primary" size="medium" onClick={requestCreateOffer}
+							disabled={!burgerConstructorStoreData.stats.isFulfilled || modalIsBlocked}
+						>
+							Оформить заказ
+						</Button>
 					</div>
 				</div>
 			</section>

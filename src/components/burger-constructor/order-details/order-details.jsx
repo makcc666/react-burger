@@ -2,10 +2,10 @@ import React from 'react';
 import styles from "./order-details.module.scss";
 import doneImage from "../../../images/done.png";
 
-const OrderDetails = () => {
+const OrderDetails = ({orderNumber}) => {
 	return (
 		<section className={styles.content}>
-			<h1 className={styles.orderIdValue}>034536</h1>
+			<h1 className={styles.orderIdValue}>{orderNumber}</h1>
 			<span className={styles.orderIdDesc}>идентификатор заказа</span>
 			<img src={doneImage} alt="Заказ создан" className={styles.doneImage}/>
 			<span className={styles.doneDesc}>Ваш заказ начали готовить</span>

@@ -25,7 +25,11 @@ export interface IIngredient {
 }
 
 export interface IGroupOfIngredients {
+	type:string,
 	title:string,
 	list:IIngredient[]
 }
 
+export interface IConstructorIngredient extends IIngredient {
+	uid:string
+}

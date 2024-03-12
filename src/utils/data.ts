@@ -1,4 +1,5 @@
 import {IGroupOfIngredients, IIngredient, TTypeIngredient} from "./types";
+import uniqid from "uniqid";
 
 
 export const hardcoreData: IIngredient[] = [
@@ -240,25 +241,18 @@ export type TGetGroupedItems = Map<TTypeIngredient, IGroupOfIngredients>;
 
 const getTitleFromType = (type: TTypeIngredient) => {
 	switch (type) {
-		case "bun": {
+		case "bun":
 			return "Булки";
-			break
-		}
-		case "sauce": {
+		case "sauce":
 			return "Соусы";
-			break;
-		}
-		case "main": {
+		case "main":
 			return "Начинка";
-			break;
-		}
-		default: {
+		default:
 			return "Новенькое";
-			break;
-		}
 	}
 }
-export const getGroupedItems = (itemsList = getAllIngredients()): TGetGroupedItems => {
+export const getGroupedItems = (itemsList: IIngredient[] = []): TGetGroupedItems => {
+	// console.log("itemsList::",itemsList);
 	const res: TGetGroupedItems = new Map();
 	for (const ingredient of itemsList) {
 		const {type} = ingredient;
@@ -267,6 +261,7 @@ export const getGroupedItems = (itemsList = getAllIngredients()): TGetGroupedIte
 			res.set(
 				type,
 				{
+					type,
 					title: getTitleFromType(type),
 					list: []
 				}
@@ -299,3 +294,8 @@ export const getRandomBurgerConstructor = (count: number): IIngredient[] => {
 
 	return res;
 }
+
+export const generateUniqID = () => uniqid();
+export const asleep = (mls: number) => new Promise(resolve =>
+	setTimeout(resolve, mls, true)
+)

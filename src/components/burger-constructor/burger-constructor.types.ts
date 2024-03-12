@@ -1,0 +1,1 @@
+export const DRAG_AND_DROP_TYPE ="burger-ingredient"
