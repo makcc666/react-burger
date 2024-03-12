@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import classNames from "classnames";
 import styles from "./burger-ingredients.module.scss";
 import TabsIngredients from "./tabs/tabs";
@@ -6,60 +6,125 @@ import GroupIngredients from "./group/group";
 import {getGroupedItems} from "../../utils/data";
 import Modal from "../modal/modal";
 import IngredientDetails from "./ingredient-details/ingredient-details";
-
+import {useDispatch, useSelector} from "react-redux";
+import InfoBlock from "../info-block/info-block";
+import {ingredientDetailsModalSlice} from "../../service/store/ingredient-details/ingredient-details-modal.slice";
+import {ingredientsLoad} from "../../service/store/burger-ingredients/burger-ingredients.utils";
+import {useInView} from "react-intersection-observer";
+import {burgerIngredientsSlice} from "../../service/store/burger-ingredients/burger-ingredients.slice";
 
 const BurgerIngredients = () => {
-	// console.log(groupedIngredients)
-	const [selectedDetailsIngredient, setSelectedDetailsIngredient] = useState(null);
-	
-	const handlerChoseIngredient = (ingredient) => setSelectedDetailsIngredient({...ingredient});
-	const handlerCloseModal = () => {
-		setSelectedDetailsIngredient(null)
-	};
-	
-	const [groupedIngredients, setGroupedIngredients] = useState([]);
+	const dispatch = useDispatch()
+	const ingredientsStoreData = useSelector(store => store.ingredients);
+	const detailsIngredientStoreData = useSelector(store => store.detailsIngredientModal);
 	
 	useEffect(() => {
-		
-		const _fetchData = async () => {
-			try {
-				const res = await fetch("https://norma.nomoreparties.space/api/ingredients");
-				if (!res.ok) throw new Error("Не удалось получить данные от сервера");
-				const resJson = await res.json();
-				// console.log("resJson::", resJson);
-				if (resJson.success !== true) throw new Error(resJson.data || resJson.error || "Невалидные данный от сервера");
-				const items = resJson.data;
-				if (items.length === 0) throw new Error("Список ингредиентов пуст");
-				setGroupedIngredients(
-					[...getGroupedItems(items).values()]
-				);
-			} catch (e) {
-				alert(`Ошибка загрузки ингредиентов: ${e.toString()}`)
-				// throw e;
-			}
-		};
-		
-		_fetchData();
+		dispatch(ingredientsLoad());
 	}, []);
+	
+	const [bunRef, inViewBun] = useInView({threshold: 0.3, initialInView: true});
+	const [mainRef, inViewMain] = useInView({threshold: 0.3,});
+	const [sauceRef, inViewSauce] = useInView({threshold: 0.3,});
+	
+	useEffect(() => {
+		let newTabType = "bun";
+		if (inViewSauce) newTabType = "sauce";
+		else if (inViewBun) newTabType = "bun"
+		else if (inViewMain) newTabType = "main";
+		dispatch(burgerIngredientsSlice.actions.setCurrentTab(newTabType))
+	}, [dispatch, inViewBun, inViewMain, inViewSauce]);
+	
+	
+	const nativeBunRef = useRef(null);
+	const nativeMainRef = useRef(null);
+	const nativeSauceRef = useRef(null);
+	
+	const nativeListOfTabsRef = useMemo(
+		() => {
+			bunRef(nativeBunRef.current);
+			mainRef(nativeMainRef.current);
+			sauceRef(nativeSauceRef.current);
+			
+			return {bun: nativeBunRef, main: nativeMainRef, sauce: nativeSauceRef};
+		},
+		[nativeBunRef.current, nativeMainRef.current, nativeSauceRef.current]
+	);
+	/*
+	useEffect(() => {
+		console.log("newTabType useEff::0")
+		
+		let newTabType;
+		if (inViewBun) newTabType = "bun";
+		else if (inViewMain) newTabType = "main";
+		else if (inViewSauce) newTabType = "sauce";
+		
+		dispatch(burgerIngredientsSlice.actions.setCurrentTab(newTabType))
+	}, [inViewBun, inViewMain, inViewSauce,dispatch]);
+	*/
+	const handlerTabManualChoice = useCallback(
+		(type) => {
+			nativeListOfTabsRef[type].current.scrollIntoView({inline: "start", behavior: "smooth"});
+		},
+		[nativeListOfTabsRef],
+	);
+	
+	const groupedIngredients = useMemo(() => {
+		return [...getGroupedItems(ingredientsStoreData.list).values()]
+	}, [ingredientsStoreData.list]);
+	
+	const handlerCloseModal = useCallback(
+		() => dispatch(ingredientDetailsModalSlice.actions.clearActive()),
+		[dispatch]
+	)
+	
+	
+	// Показываем заглушку во время загрузки данных с сервера или в случае ошибки получения данных
+	switch (ingredientsStoreData.status) {
+		
+		case "pending": {
+			return <InfoBlock
+				message="Загружаем по квантовозапутанным каналам список ингредиентов"
+				title={"Нужно немного подождать"}
+			/>
+		}
+		case "error": {
+			return <InfoBlock
+				message={ingredientsStoreData.error}
+				title={"Возникла ошибка"}
+			/>
+		}
+		
+		case "initiation": {
+			return <InfoBlock
+				message="Попробуйте перезагрузить страницу"
+				title={"Возникла ошибка"}
+			/>
+		}
+		
+		default: {
+			break;
+		}
+	}
+	
 	
 	return (
 		<>
-			{selectedDetailsIngredient &&
+			{detailsIngredientStoreData.isActive &&
 				<Modal onClose={handlerCloseModal} title="Детали ингредиента">
-					<IngredientDetails ingredient={selectedDetailsIngredient}/>
+					<IngredientDetails ingredient={detailsIngredientStoreData.item}/>
 				</Modal>
 			}
 			
 			<section className={classNames(styles.burgerIngredients)}>
 				<h2 className={styles.title}>Соберите бургер</h2>
-				<TabsIngredients/>
+				<TabsIngredients handlerManualChoice={handlerTabManualChoice}/>
 				<ul className={styles.ingredientsList}>
-					{groupedIngredients.map(record => (
-						<li key={record.title}>
-							<GroupIngredients title={record.title} list={record.list}
-								handlerChoseIngredient={handlerChoseIngredient}/>
-						</li>
-					))}
+					{groupedIngredients.map(group => (
+							<li key={group.type} ref={nativeListOfTabsRef[group.type]}>
+								<GroupIngredients title={group.title} list={group.list} type={group.type}/>
+							</li>
+						)
+					)}
 				
 				</ul>
 			</section>

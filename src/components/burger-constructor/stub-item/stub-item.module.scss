@@ -1,0 +1,10 @@
+.element {
+  opacity: 0.5;
+
+  & img,
+  & span[class*="price"],
+  & span[class*="action"]
+  {
+	opacity:0
+  }
+}

@@ -42,6 +42,11 @@
 	  align-items: center;
 	  gap: var(--SIZE_x2);
 	}
+
+	& .stubIngredient {
+	  margin-left: calc(24px + var(--SIZE_x2))
+	}
+
   }
 }
 
