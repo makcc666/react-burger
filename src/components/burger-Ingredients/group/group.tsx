@@ -1,9 +1,9 @@
-import React from "react";
+import React, {memo} from "react";
 import styles from "./group.module.scss";
 import Item from "../item/item";
 import {IPropsGroup} from "./group.types";
 
-const GroupIngredients = ({title, list}: IPropsGroup) => {
+const GroupIngredients = ({title, list}: IPropsGroup)=> {
 	return (
 		<aside>
 			<h3 className={styles.title}>{title}</h3>
@@ -15,4 +15,4 @@ const GroupIngredients = ({title, list}: IPropsGroup) => {
 		</aside>
 	)
 }
-export default GroupIngredients
+export default memo(GroupIngredients)

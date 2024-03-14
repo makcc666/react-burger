@@ -12,6 +12,7 @@ import {getClearIngredientsList} from "../../service/store/burger-constructor/bu
 import {sendOrder} from "../../service/store/burger-offer-order/burger-offer-order.utils";
 import ModalOfferOrder from "./modal-offer-order/modal-offer-order";
 import {DRAG_AND_DROP_TYPE} from "./burger-constructor.types";
+import store from "../../service/store";
 
 
 const BurgerConstructor = () => {
@@ -40,9 +41,12 @@ const BurgerConstructor = () => {
 	
 	
 	const requestCreateOffer = async () => {
+		
 		const res = await dispatch(
 			sendOrder(
-				getClearIngredientsList().map(ingredient => ingredient._id)
+				getClearIngredientsList(
+					store.getState().burgerConstructor
+				).map(ingredient => ingredient._id)
 			)
 		)
 		if (res?.error) {

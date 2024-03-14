@@ -23,7 +23,7 @@ const AppHeader = () => {
 					</a>
 				</li>
 				<li className={classNames(styles.side, styles.centerSide)}>
-					<a href="/" >
+					<a href="/public" >
 						<Logo/>
 					</a>
 				</li>

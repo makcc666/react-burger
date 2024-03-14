@@ -9,19 +9,29 @@ import IngredientDetails from "./ingredient-details/ingredient-details";
 import {useDispatch, useSelector} from "react-redux";
 import InfoBlock from "../info-block/info-block";
 import {ingredientDetailsModalSlice} from "../../service/store/ingredient-details/ingredient-details-modal.slice";
-import {ingredientsLoad} from "../../service/store/burger-ingredients/burger-ingredients.utils";
 import {useInView} from "react-intersection-observer";
-import {burgerIngredientsSlice} from "../../service/store/burger-ingredients/burger-ingredients.slice";
+import {
+	burgerIngredientsSlice,
+} from "../../service/store/burger-ingredients/burger-ingredients.slice";
+import {createSelector} from "@reduxjs/toolkit";
+
+const getIng = state => {
+	console.log("getIng::state::", state)
+	return state.ingredients.list
+};
+const getIt = (items, cell) => {
+	console.log("getIt::", items, cell)
+	return items[cell];
+};
+const asd = createSelector([getIng], getIt);
+// asd(1)
+
 
 const BurgerIngredients = () => {
 	const dispatch = useDispatch()
 	const ingredientsStoreData = useSelector(store => store.ingredients);
 	const detailsIngredientStoreData = useSelector(store => store.detailsIngredientModal);
-	
-	useEffect(() => {
-		dispatch(ingredientsLoad());
-	}, []);
-	
+
 	const [bunRef, inViewBun] = useInView({threshold: 0.3, initialInView: true});
 	const [mainRef, inViewMain] = useInView({threshold: 0.3,});
 	const [sauceRef, inViewSauce] = useInView({threshold: 0.3,});
@@ -49,18 +59,7 @@ const BurgerIngredients = () => {
 		},
 		[nativeBunRef.current, nativeMainRef.current, nativeSauceRef.current]
 	);
-	/*
-	useEffect(() => {
-		console.log("newTabType useEff::0")
-		
-		let newTabType;
-		if (inViewBun) newTabType = "bun";
-		else if (inViewMain) newTabType = "main";
-		else if (inViewSauce) newTabType = "sauce";
-		
-		dispatch(burgerIngredientsSlice.actions.setCurrentTab(newTabType))
-	}, [inViewBun, inViewMain, inViewSauce,dispatch]);
-	*/
+	
 	const handlerTabManualChoice = useCallback(
 		(type) => {
 			nativeListOfTabsRef[type].current.scrollIntoView({inline: "start", behavior: "smooth"});
@@ -101,9 +100,6 @@ const BurgerIngredients = () => {
 			/>
 		}
 		
-		default: {
-			break;
-		}
 	}
 	
 	

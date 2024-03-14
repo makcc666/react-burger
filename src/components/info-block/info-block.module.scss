@@ -1,0 +1,29 @@
+.infoBlock {
+  & .title {
+
+  }
+  & .message {
+
+  }
+
+  & .childrenContainer {
+
+  }
+}
+
+
+.mode {
+  &.default {
+  }
+
+  &.debug {
+	display: inline-flex;
+	flex-direction: column;
+	background-color: rgb(114, 0, 0);
+	padding: 15px;
+	box-sizing: border-box;
+	font-size: 120%;
+	font-family: monospace;
+  }
+
+}

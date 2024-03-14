@@ -1,6 +1,4 @@
-import store from "../index";
-
-export const getClearIngredientsList = ({bun, ingredients} = store.getState().burgerConstructor) => {
+export const getClearIngredientsList = ({bun, ingredients} ) => {
 	let res = [...ingredients];
 	if (bun) {
 		res.unshift(bun);

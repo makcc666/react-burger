@@ -122,5 +122,5 @@ export const burgerConstructorSlice = createSlice({
 		),
 	}),
 });
-export const {actions, reducer} = burgerConstructorSlice;
-export default reducer;
+export const {actions:burgerActions, reducer:burgerReducer} = burgerConstructorSlice;
+export default burgerReducer;

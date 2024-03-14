@@ -7,7 +7,6 @@ import {ingredientDetailsModalSlice} from "../../../service/store/ingredient-det
 
 import {useDrag} from "react-dnd";
 import classNames from "classnames";
-import {getCountOfIngredient} from "../../../service/store/burger-constructor/burger-constructor.utils";
 import {DRAG_AND_DROP_TYPE} from "../../burger-constructor/burger-constructor.types";
 
 
@@ -16,7 +15,7 @@ const Item = ({ingredient}: IPropsItem) => {
 
 	// Как оптимизировать, избавившись от ререндеринга при изменении числа других ингредиентов?
 	// @ts-ignore
-	const itemsCountList = useSelector(store => store.burgerConstructor.itemsCountList);
+	const count = useSelector(store => store.burgerConstructor.itemsCountList[ingredient._id]);
 
 	const [{isDragging}, dragRef] = useDrag(
 		() => ({
@@ -36,11 +35,6 @@ const Item = ({ingredient}: IPropsItem) => {
 			dispatch(ingredientDetailsModalSlice.actions.setActive(ingredient));
 		},
 		[dispatch]
-	);
-
-	const count = useMemo(
-		() => getCountOfIngredient(ingredient._id, itemsCountList),
-		[itemsCountList]
 	);
 
 	const compiledClassName = useMemo(() => {

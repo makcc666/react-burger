@@ -1,5 +1,6 @@
-import { createSlice} from '@reduxjs/toolkit';
 import {ingredientsLoad} from "./burger-ingredients.utils";
+import {createSlice} from "@reduxjs/toolkit";
+
 
 const initialState = {
 	list: [],
@@ -67,6 +68,4 @@ export const burgerIngredientsSlice = createSlice({
 	},
 });
 
-
-export const {actions, reducer} = burgerIngredientsSlice;
-export default reducer;
+export const {selectors:ingredientsSelectors,actions:ingredientsActions, reducer:ingredientsReducer} = burgerIngredientsSlice;
