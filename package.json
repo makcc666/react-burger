@@ -3,14 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^7.1.0",
     "@reduxjs/toolkit": "^2.2.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.80",
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
     "@ya.praktikum/react-developer-burger-ui-components": "^1.14.0",
     "classnames": "^2.5.1",
     "react": "^18.2.0",
@@ -19,6 +17,7 @@
     "react-dom": "^18.2.0",
     "react-intersection-observer": "^9.8.1",
     "react-redux": "^9.1.0",
+    "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
@@ -28,7 +27,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npx craco start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -52,6 +51,10 @@
     ]
   },
   "devDependencies": {
-    "@types/uniqid": "^5.3.4"
+    "@types/node": "^16.18.80",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@types/uniqid": "^5.3.4",
+    "craco-alias": "^3.0.1"
   }
 }

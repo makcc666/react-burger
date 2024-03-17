@@ -8,7 +8,7 @@ import Modal from "../modal/modal";
 import IngredientDetails from "./ingredient-details/ingredient-details";
 import {useDispatch, useSelector} from "react-redux";
 import InfoBlock from "../info-block/info-block";
-import {ingredientDetailsModalSlice} from "../../service/store/ingredient-details/ingredient-details-modal.slice";
+import {ingredientDetailsModalSlice} from "@store/ingredient-details/ingredient-details-modal.slice";
 import {useInView} from "react-intersection-observer";
 import {
 	burgerIngredientsSlice,
