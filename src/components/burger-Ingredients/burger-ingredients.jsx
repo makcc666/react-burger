@@ -3,7 +3,7 @@ import classNames from "classnames";
 import styles from "./burger-ingredients.module.scss";
 import TabsIngredients from "./tabs/tabs";
 import GroupIngredients from "./group/group";
-import {getGroupedItems} from "../../utils/data";
+import {getGroupedItems} from "@utils/data";
 import Modal from "../modal/modal";
 import IngredientDetails from "./ingredient-details/ingredient-details";
 import {useDispatch, useSelector} from "react-redux";
@@ -12,7 +12,7 @@ import {ingredientDetailsModalSlice} from "@store/ingredient-details/ingredient-
 import {useInView} from "react-intersection-observer";
 import {
 	burgerIngredientsSlice,
-} from "../../service/store/burger-ingredients/burger-ingredients.slice";
+} from "@store/burger-ingredients/burger-ingredients.slice";
 import {createSelector} from "@reduxjs/toolkit";
 
 const getIng = state => {

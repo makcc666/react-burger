@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {BurgerIcon, ListIcon, Logo, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import styles from "./app-header.module.scss";
 import classNames from "classnames";
+import {NavLink} from "react-router-dom";
 
 
 const AppHeader = () => {
@@ -9,6 +10,14 @@ const AppHeader = () => {
 		<header className={styles.container}>
 			<ul className={styles.content}>
 				<li className={classNames(styles.side, styles.leftSide)}>
+					<NavLink
+						to={`/`}
+					>
+						{({isActive,...args}) => {
+							console.log("args::",args)
+							return <span className={isActive ? styles.active : ""}>Some name</span>
+						}}
+					</NavLink>
 					<a href="#" className={classNames(styles.link, styles.active)}>
 						<div className={styles.linkContent}>
 							<BurgerIcon type="primary"/>

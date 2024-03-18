@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styles from './app.module.css';
 import {useDispatch} from "react-redux";
-import {ingredientsLoad} from "../../service/store/burger-ingredients/burger-ingredients.utils";
+import {ingredientsLoad} from "@store/burger-ingredients/burger-ingredients.utils";
 import LoaderPreview from "./preloader/preloader";
 import AppContent from "./app-content/app-content";
 import {LOADING_STATUSES} from "./preloader/preloader.types";

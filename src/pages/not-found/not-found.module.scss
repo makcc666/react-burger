@@ -1,0 +1,8 @@
+.container {
+}
+
+
+.link {
+  composes: text text_type_main-medium from global;
+  color: var(--text-primary-color);
+}
