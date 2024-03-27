@@ -3,24 +3,18 @@ import classNames from "classnames";
 import styles from "./burger-ingredients.module.scss";
 import TabsIngredients from "./tabs/tabs";
 import GroupIngredients from "./group/group";
-import {getGroupedItems} from "../../utils/data";
-import Modal from "../modal/modal";
-import IngredientDetails from "./ingredient-details/ingredient-details";
+import {getGroupedItems} from "@utils/data";
 import {useDispatch, useSelector} from "react-redux";
 import InfoBlock from "../info-block/info-block";
-import {ingredientDetailsModalSlice} from "../../service/store/ingredient-details/ingredient-details-modal.slice";
-import {ingredientsLoad} from "../../service/store/burger-ingredients/burger-ingredients.utils";
 import {useInView} from "react-intersection-observer";
-import {burgerIngredientsSlice} from "../../service/store/burger-ingredients/burger-ingredients.slice";
+import {
+	burgerIngredientsSlice,
+} from "@store/burger-ingredients/burger-ingredients.slice";
+
 
 const BurgerIngredients = () => {
 	const dispatch = useDispatch()
 	const ingredientsStoreData = useSelector(store => store.ingredients);
-	const detailsIngredientStoreData = useSelector(store => store.detailsIngredientModal);
-	
-	useEffect(() => {
-		dispatch(ingredientsLoad());
-	}, []);
 	
 	const [bunRef, inViewBun] = useInView({threshold: 0.3, initialInView: true});
 	const [mainRef, inViewMain] = useInView({threshold: 0.3,});
@@ -49,18 +43,7 @@ const BurgerIngredients = () => {
 		},
 		[nativeBunRef.current, nativeMainRef.current, nativeSauceRef.current]
 	);
-	/*
-	useEffect(() => {
-		console.log("newTabType useEff::0")
-		
-		let newTabType;
-		if (inViewBun) newTabType = "bun";
-		else if (inViewMain) newTabType = "main";
-		else if (inViewSauce) newTabType = "sauce";
-		
-		dispatch(burgerIngredientsSlice.actions.setCurrentTab(newTabType))
-	}, [inViewBun, inViewMain, inViewSauce,dispatch]);
-	*/
+	
 	const handlerTabManualChoice = useCallback(
 		(type) => {
 			nativeListOfTabsRef[type].current.scrollIntoView({inline: "start", behavior: "smooth"});
@@ -71,11 +54,6 @@ const BurgerIngredients = () => {
 	const groupedIngredients = useMemo(() => {
 		return [...getGroupedItems(ingredientsStoreData.list).values()]
 	}, [ingredientsStoreData.list]);
-	
-	const handlerCloseModal = useCallback(
-		() => dispatch(ingredientDetailsModalSlice.actions.clearActive()),
-		[dispatch]
-	)
 	
 	
 	// Показываем заглушку во время загрузки данных с сервера или в случае ошибки получения данных
@@ -101,20 +79,10 @@ const BurgerIngredients = () => {
 			/>
 		}
 		
-		default: {
-			break;
-		}
 	}
 	
 	
 	return (
-		<>
-			{detailsIngredientStoreData.isActive &&
-				<Modal onClose={handlerCloseModal} title="Детали ингредиента">
-					<IngredientDetails ingredient={detailsIngredientStoreData.item}/>
-				</Modal>
-			}
-			
 			<section className={classNames(styles.burgerIngredients)}>
 				<h2 className={styles.title}>Соберите бургер</h2>
 				<TabsIngredients handlerManualChoice={handlerTabManualChoice}/>
@@ -128,8 +96,6 @@ const BurgerIngredients = () => {
 				
 				</ul>
 			</section>
-		</>
-	
 	);
 };
 

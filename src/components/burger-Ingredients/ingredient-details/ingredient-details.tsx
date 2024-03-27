@@ -1,6 +1,32 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import styles from "./ingredient-details.module.scss";
-import {IPropsDetailsPopup} from "./ingredient-details.types";
+import {INGREDIENT_DETAILS_ERROR, IPropsDetailsPopup, IStoreMock} from "./ingredient-details.types";
+import {useParams} from "react-router-dom";
+import {useSelector} from "react-redux";
+import InfoBlock from "@components/info-block/info-block";
+import {findIngredientFromList} from "@store/burger-ingredients/burger-ingredients.utils";
+
+
+export const IngredientDetailsFromLocation = () => {
+	const params = useParams();
+	const id = params?.id ?? null;
+	if (!id) throw new Error(INGREDIENT_DETAILS_ERROR.INVALID_ID);
+
+	const ingredientsStoreData = useSelector((store: IStoreMock) => store.ingredients.list);
+	const ingredientData = useMemo(
+		() => findIngredientFromList(ingredientsStoreData, id),
+		[id, ingredientsStoreData]
+	);
+
+
+	if (!ingredientData) return (
+		<InfoBlock message={INGREDIENT_DETAILS_ERROR.NOT_FOUND_BY_ID} title="Детали ингредиента"/>
+	)
+
+	return (
+		<IngredientDetails ingredient={ingredientData}/>
+	)
+}
 
 const IngredientDetails = ({ingredient}: IPropsDetailsPopup) => {
 	return (

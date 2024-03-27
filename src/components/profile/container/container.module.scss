@@ -1,0 +1,24 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr;
+  max-width: 1280px;
+  width: 100%;
+  gap: var(--SIZE_x15);
+  margin-top: var(--SIZE_x30  );
+}
+
+.leftMenu {
+  opacity: 0.9;
+
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  opacity: 0.9;
+
+}
+
+.content {
+  opacity: 0.9;
+}

@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {sendApiRequest} from "../../../utils/api-requests/api-requests";
+import {sendApiRequest} from "@utils/api-requests";
 
 export const ingredientsLoad = createAsyncThunk(
 	'ingredients/ingredientsLoad',
@@ -11,3 +11,6 @@ export const ingredientsLoad = createAsyncThunk(
 		return list
 	}
 )
+
+
+export const findIngredientFromList = (list, id) => list.find(item => item._id === id)

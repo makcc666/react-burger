@@ -12,12 +12,18 @@ import {getClearIngredientsList} from "../../service/store/burger-constructor/bu
 import {sendOrder} from "../../service/store/burger-offer-order/burger-offer-order.utils";
 import ModalOfferOrder from "./modal-offer-order/modal-offer-order";
 import {DRAG_AND_DROP_TYPE} from "./burger-constructor.types";
+import store from "../../service/store";
+import {Navigate} from "react-router-dom";
+import {ProtectedRouteForUser} from "@components/protected-route-element/protected-route-element";
+import {burgerOfferOrderSlice} from "@store/burger-offer-order/burger-offer-order.slice";
 
 
 const BurgerConstructor = () => {
 	const dispatch = useDispatch();
+	const isAuth = useSelector(state => state.user.isAuth);
 	const {isBlocked: modalIsBlocked, isDisplay: modalIsDisplay} = useSelector(store => store.offerOrder)
 	const burgerConstructorStoreData = useSelector(store => store.burgerConstructor);
+	const [pathForceRedirectToAuth, setForcedRedirectToAuth] = useState(null);
 	
 	const addIngredient = useCallback(
 		({ingredient}) => {
@@ -40,9 +46,15 @@ const BurgerConstructor = () => {
 	
 	
 	const requestCreateOffer = async () => {
+		if (!isAuth) {
+			return setForcedRedirectToAuth(true);
+		}
+		
 		const res = await dispatch(
 			sendOrder(
-				getClearIngredientsList().map(ingredient => ingredient._id)
+				getClearIngredientsList(
+					store.getState().burgerConstructor
+				).map(ingredient => ingredient._id)
 			)
 		)
 		if (res?.error) {
@@ -51,9 +63,35 @@ const BurgerConstructor = () => {
 		console.log("requestCreateOffer::ok", res)
 	}
 	
+	const handlerCloseModal = useCallback(
+		(orderNumber) => {
+			setForcedRedirectToAuth(`/profile/orders/${orderNumber}`);
+			dispatch(burgerOfferOrderSlice.actions.closeModal());
+		},
+		[setForcedRedirectToAuth],
+	);
+	
+	
+	switch (pathForceRedirectToAuth) {
+		case null: {
+			break
+		}
+		case true: {
+			return (
+				<ProtectedRouteForUser/>
+			);
+		}
+		default: {
+			return (
+				<Navigate to={pathForceRedirectToAuth}/>
+			)
+			break;
+		}
+	}
+	
 	return (
 		<>
-			{modalIsDisplay && <ModalOfferOrder/>}
+			{modalIsDisplay && <ModalOfferOrder onClose={handlerCloseModal}/>}
 			
 			<section className={styles.burgerConstructor}>
 				<ul ref={drop} className={styles.totalIngredients}>

@@ -1,5 +1,6 @@
-import { createSlice} from '@reduxjs/toolkit';
 import {ingredientsLoad} from "./burger-ingredients.utils";
+import {createSlice} from "@reduxjs/toolkit";
+
 
 const initialState = {
 	list: [],
@@ -7,6 +8,7 @@ const initialState = {
 	error: null,
 	currentTab: "bun",
 }
+
 
 export const burgerIngredientsSlice = createSlice({
 	name: 'ingredients',
@@ -62,11 +64,16 @@ export const burgerIngredientsSlice = createSlice({
 				);
 			})
 			.addCase(ingredientsLoad.pending, (state, action) => {
-				burgerIngredientsSlice.caseReducers.ingredientsLoadPending(state);
+				burgerIngredientsSlice.caseReducers.ingredientsLoadPending(
+					state,
+					burgerIngredientsSlice.actions.ingredientsLoadPending()
+				)
 			})
-	},
+	}
 });
 
-
-export const {actions, reducer} = burgerIngredientsSlice;
-export default reducer;
+export const {
+	selectors: ingredientsSelectors,
+	actions: ingredientsActions,
+	reducer: ingredientsReducer
+} = burgerIngredientsSlice;

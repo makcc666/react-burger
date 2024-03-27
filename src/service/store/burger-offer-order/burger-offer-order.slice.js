@@ -72,7 +72,10 @@ export const burgerOfferOrderSlice = createSlice({
 				);
 			})
 			.addCase(sendOrder.pending, (state, action) => {
-				burgerOfferOrderSlice.caseReducers.sendOrderPending(state);
+				burgerOfferOrderSlice.caseReducers.sendOrderPending(
+					state,
+					burgerOfferOrderSlice.actions.sendOrderPending()
+				);
 			})
 	},
 });
