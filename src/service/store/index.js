@@ -1,16 +1,15 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import {burgerIngredientsSlice} from "./burger-ingredients/burger-ingredients.slice";
-import {ingredientDetailsModalSlice} from "./ingredient-details/ingredient-details-modal.slice";
-import {burgerConstructorSlice} from "./burger-constructor/burger-constructor.slice";
-import {burgerOfferOrderSlice} from "./burger-offer-order/burger-offer-order.slice";
+import {burgerIngredientsSlice} from "@store/burger-ingredients/burger-ingredients.slice";
+import {burgerConstructorSlice} from "@store/burger-constructor/burger-constructor.slice";
+import {burgerOfferOrderSlice} from "@store/burger-offer-order/burger-offer-order.slice";
+import {userSlice} from "@store/user/user.slice";
 
 
 export const rootReducer = combineReducers({
 	ingredients: burgerIngredientsSlice.reducer,
-	detailsIngredientModal: ingredientDetailsModalSlice.reducer,
 	burgerConstructor: burgerConstructorSlice.reducer,
 	offerOrder: burgerOfferOrderSlice.reducer,
-	
+	user: userSlice.reducer,
 })
 
 

@@ -3,17 +3,16 @@ import styles from "./item.module.scss";
 import {Counter, CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {IPropsItem} from "./item.types";
 import {useDispatch, useSelector} from "react-redux";
-import {ingredientDetailsModalSlice} from "../../../service/store/ingredient-details/ingredient-details-modal.slice";
 
 import {useDrag} from "react-dnd";
 import classNames from "classnames";
 import {DRAG_AND_DROP_TYPE} from "../../burger-constructor/burger-constructor.types";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 
 const Item = ({ingredient}: IPropsItem) => {
-	const dispatch = useDispatch();
+	const location = useLocation();
 
-	// Как оптимизировать, избавившись от ререндеринга при изменении числа других ингредиентов?
 	// @ts-ignore
 	const count = useSelector(store => store.burgerConstructor.itemsCountList[ingredient._id]);
 
@@ -27,15 +26,6 @@ const Item = ({ingredient}: IPropsItem) => {
 		}),
 		[]
 	)
-	// console.log("dnd::",{opacity})
-
-	// Проба оптимизации
-	const setActiveDetailsIngredient = useCallback(
-		() => {
-			dispatch(ingredientDetailsModalSlice.actions.setActive(ingredient));
-		},
-		[dispatch]
-	);
 
 	const compiledClassName = useMemo(() => {
 		return classNames(
@@ -47,9 +37,10 @@ const Item = ({ingredient}: IPropsItem) => {
 	}, [isDragging])
 
 	return (
-		<article
+		<Link
+			to={`/ingredient/${ingredient._id}`}
+			state={{...location?.state, backgroundLocation: location}}
 			className={compiledClassName}
-			onClick={setActiveDetailsIngredient}
 			ref={dragRef}
 		>
 			{count > 0 && <Counter count={count} size="default" extraClass="m-1"/>}
@@ -60,7 +51,7 @@ const Item = ({ingredient}: IPropsItem) => {
 				<CurrencyIcon type="primary"/>
 			</div>
 			<p className={styles.title}>{ingredient.name}</p>
-		</article>
+		</Link>
 	);
 };
 

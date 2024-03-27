@@ -9,6 +9,7 @@ const initialState = {
 	currentTab: "bun",
 }
 
+
 export const burgerIngredientsSlice = createSlice({
 	name: 'ingredients',
 	initialState: structuredClone(initialState),
@@ -63,9 +64,16 @@ export const burgerIngredientsSlice = createSlice({
 				);
 			})
 			.addCase(ingredientsLoad.pending, (state, action) => {
-				burgerIngredientsSlice.caseReducers.ingredientsLoadPending(state);
+				burgerIngredientsSlice.caseReducers.ingredientsLoadPending(
+					state,
+					burgerIngredientsSlice.actions.ingredientsLoadPending()
+				)
 			})
-	},
+	}
 });
 
-export const {selectors:ingredientsSelectors,actions:ingredientsActions, reducer:ingredientsReducer} = burgerIngredientsSlice;
+export const {
+	selectors: ingredientsSelectors,
+	actions: ingredientsActions,
+	reducer: ingredientsReducer
+} = burgerIngredientsSlice;

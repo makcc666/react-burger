@@ -5,6 +5,7 @@ import {ingredientsLoad} from "@store/burger-ingredients/burger-ingredients.util
 import LoaderPreview from "./preloader/preloader";
 import AppContent from "./app-content/app-content";
 import {LOADING_STATUSES} from "./preloader/preloader.types";
+import {loadUser} from "@store/user/user.slice";
 
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
 		}, 300);
 
 		// @ts-ignore
-		dispatch(ingredientsLoad()).then(() => {
+		Promise.all([dispatch(ingredientsLoad()), dispatch(loadUser())]).then(() => {
 			clearTimeout(timerId);
 			setLoadStatus(LOADING_STATUSES.FINISH)
 		});

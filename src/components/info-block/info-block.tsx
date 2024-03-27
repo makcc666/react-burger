@@ -11,6 +11,7 @@ const InfoBlock = ({title, message, type = EType.DEFAULT, children}: IPropsError
 				[styles.default]: type === EType.DEFAULT,
 				[styles.mode]: type !== EType.DEFAULT,
 				[styles.debug]: type === EType.DEBUG,
+				[styles.error]: type === EType.ERROR,
 			}
 		)}>
 			<h1 className={styles.title}>{title}</h1>

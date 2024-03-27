@@ -1,48 +1,53 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {BurgerIcon, ListIcon, Logo, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import styles from "./app-header.module.scss";
 import classNames from "classnames";
-import {NavLink} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
+import {useSelector} from "react-redux";
 
+
+const LinkWithIcon = ({IconComponent, title, to}) => {
+	const calcClassesForLink = useCallback(
+		({isActive}) => classNames(
+			{[styles.active]: isActive,},
+			styles.link
+		),
+		[],
+	);
+	
+	
+	return (
+		<NavLink
+			to={to}
+			className={calcClassesForLink}
+		>
+			{({isActive}) => (
+				<div className={styles.linkContent}>
+					<IconComponent type={isActive ? "primary" : "secondary"}/>
+					<span className="text text_type_main-default">{title}</span>
+				</div>
+			)}
+		
+		</NavLink>
+	)
+}
 
 const AppHeader = () => {
+	const {profile} = useSelector(state=>state.user);
 	return (
 		<header className={styles.container}>
 			<ul className={styles.content}>
 				<li className={classNames(styles.side, styles.leftSide)}>
-					<NavLink
-						to={`/`}
-					>
-						{({isActive,...args}) => {
-							console.log("args::",args)
-							return <span className={isActive ? styles.active : ""}>Some name</span>
-						}}
-					</NavLink>
-					<a href="#" className={classNames(styles.link, styles.active)}>
-						<div className={styles.linkContent}>
-							<BurgerIcon type="primary"/>
-							<span className="text text_type_main-default">Конструктор</span>
-						</div>
-					</a>
-					<a href="#" className={styles.link}>
-						<div className={styles.linkContent}>
-							<ListIcon type="secondary"/>
-							<span className="text text_type_main-default">Лента заказов</span>
-						</div>
-					</a>
+					<LinkWithIcon to="/" title="Конструктор" IconComponent={BurgerIcon}/>
+					<LinkWithIcon to="/some" title="Лента заказов" IconComponent={ListIcon}/>
 				</li>
 				<li className={classNames(styles.side, styles.centerSide)}>
-					<a href="/public" >
+					<Link to="/">
 						<Logo/>
-					</a>
+					</Link>
 				</li>
 				<li className={classNames(styles.side, styles.rightSide)}>
-					<a href="#" className={styles.link}>
-						<div className={styles.linkContent}>
-							<ProfileIcon type="secondary"/>
-							<span className="text text_type_main-default">Личный кабинет</span>
-						</div>
-					</a>
+					<LinkWithIcon to="/profile" title={profile ? profile.name : "Личный кабинет"} IconComponent={ProfileIcon}/>
 				</li>
 			</ul>
 		</header>
