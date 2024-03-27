@@ -16,8 +16,8 @@ import {authStageFlagsStore} from "@store/user/user.utils";
 const AuthResetPassword = () => {
 	const navigate = useNavigate()
 	
-	const passwordInput = useInputValue("some");
-	const tokenInput = useInputValue("some");
+	const passwordInput = useInputValue("");
+	const tokenInput = useInputValue("");
 	const formLock = useLockLoader(false);
 	
 	const handlerSubmit = async (event) => {

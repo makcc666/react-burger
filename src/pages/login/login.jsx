@@ -16,8 +16,8 @@ import {Link} from "react-router-dom";
 
 const AuthLogin = () => {
 	const dispatch = useDispatch();
-	const emailInput = useInputValue("some13@some.some");
-	const passwordInput = useInputValue("123123");
+	const emailInput = useInputValue("");
+	const passwordInput = useInputValue("");
 	
 	const formLock = useLockLoader(false);
 	

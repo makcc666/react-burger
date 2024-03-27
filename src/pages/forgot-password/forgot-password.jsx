@@ -16,7 +16,7 @@ import {authStageFlagsStore} from "@store/user/user.utils";
 const AuthForgotPassword = () => {
 	const navigate = useNavigate()
 	
-	const emailInput = useInputValue("qsglxy82on@gonetor.com");
+	const emailInput = useInputValue("");
 	const formLock = useLockLoader(false);
 	
 	const handlerSubmit = async (event) => {
